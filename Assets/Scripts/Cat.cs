@@ -5,8 +5,13 @@
 /// </summary>
 namespace Assets.Scripts
 {
-    public class Cat
+    public class Cat:MonoBehaviour
     {
+        public Material[] furColors;
+        public Material[] eyeColors;
+        public GameObject body;
+        public GameObject[] eyes;
+
         #region Enums
         /// <summary>
         /// Fur Color Options
@@ -30,8 +35,6 @@ namespace Assets.Scripts
         #endregion
 
         #region Properties
-        public GameObject cat;
-
         private FurOptions furColor;
 
         public FurOptions FurColor
@@ -40,16 +43,20 @@ namespace Assets.Scripts
             set
             {
                 furColor = value;
-                this.UpdateFurColor(this.furColor);
+                this.UpdateFurColor(this.body, this.furColor);
             }
         }
 
-        private string eyeColor;
+        private EyeOptions eyeColor;
 
-        public string EyeColor
+        public EyeOptions EyeColor
         {
             get { return eyeColor; }
-            set { eyeColor = value; }
+            set
+            {
+                eyeColor = value;
+                this.UpdateEyeColor(this.eyes, this.eyeColor);
+            }
         }
         #endregion
 
@@ -57,18 +64,18 @@ namespace Assets.Scripts
         /// Update Cat Fur Color
         /// </summary>
         /// <param name="furColor"></param>
-        public void UpdateFurColor(FurOptions furColor)
+        public void UpdateFurColor(GameObject obj, FurOptions furColor)
         {
             switch (furColor)
             {
                 case FurOptions.BLACK:
-                    this.cat.GetComponent<Renderer>().material.color = Color.black;
+                    obj.GetComponent<Renderer>().sharedMaterial = furColors[0];
                     break;
                 case FurOptions.BROWN:
-                    this.cat.GetComponent<Renderer>().material.color = new Color(139f, 69f, 19f);
+                    obj.GetComponent<Renderer>().sharedMaterial = furColors[1];
                     break;
                 case FurOptions.GREY:
-                    this.cat.GetComponent<Renderer>().material.color = Color.grey;
+                    obj.GetComponent<Renderer>().sharedMaterial = furColors[2];
                     break;
             }
         }
@@ -77,19 +84,22 @@ namespace Assets.Scripts
         /// Update Cat Eye Color
         /// </summary>
         /// <param name="eyeColor"></param>
-        public void UpdateEyeColor(EyeOptions eyeColor)
+        public void UpdateEyeColor(GameObject[] objects, EyeOptions eyeColor)
         {
-            switch (eyeColor)
+            foreach (var obj in objects)
             {
-                case EyeOptions.BLUE:
-                    this.cat.GetComponent<Renderer>().material.color = Color.blue;
-                    break;
-                case EyeOptions.BROWN:
-                    this.cat.GetComponent<Renderer>().material.color = new Color(139f, 69f, 19f);
-                    break;
-                case EyeOptions.GREEN:
-                    this.cat.GetComponent<Renderer>().material.color = Color.green;
-                    break;
+                switch (eyeColor)
+                {
+                    case EyeOptions.BLUE:
+                        obj.GetComponent<Renderer>().sharedMaterial = eyeColors[0];
+                        break;
+                    case EyeOptions.BROWN:
+                        obj.GetComponent<Renderer>().sharedMaterial = eyeColors[1];
+                        break;
+                    case EyeOptions.GREEN:
+                        obj.GetComponent<Renderer>().sharedMaterial = eyeColors[2];
+                        break;
+                }
             }
         }
     }
